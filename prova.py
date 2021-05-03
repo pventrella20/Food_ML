@@ -137,10 +137,10 @@ def splittingAndEval(df):
     knn.fit(X_train_scaled, y_train)                # fit del knn
 
     # Checking performance on the training set
-    print('Accuracy of K-NN classifier on training set: {:.2f}'
+    print('Accuracy of K-NN regressor on training set: {:.2f}'
           .format(knn.score(X_train_scaled, y_train)))
     # Checking performance on the test set
-    print('Accuracy of K-NN classifier on test set: {:.2f}'
+    print('Accuracy of K-NN regressor on test set: {:.2f}'
           .format(knn.score(X_test_scaled, y_test)))
     example_food = [[5.5, 2.2, 0.70]]  # inserire qui i valori di grassi, proteine e carboidrati per la predizione
     example_food_scaled = scaler.transform(example_food)
