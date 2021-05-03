@@ -1,4 +1,8 @@
 import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.preprocessing import MinMaxScaler
 
 
 def parseCSV(path):
@@ -118,13 +122,35 @@ def eliminateGrams(df):
                 df.loc[index, col] = float(df.loc[index, col]) * 1000000
     return df
 
+def splittingAndEval(df):
+    food_features = ["carbohydrate", "protein", "total_fat"]
+    X_food = df[food_features]
+    y_food = df['calories']
+    print(df.head(10))
+    # preprocessing
+    X_train, X_test, y_train, y_test = train_test_split(X_food, y_food, random_state=0)
+
+    scaler = MinMaxScaler()
+    X_train_scaled = scaler.fit_transform(X_train)  # features normalization (train set)
+    X_test_scaled = scaler.transform(X_test)        # features normalization (test set)
+    knn = KNeighborsRegressor(n_neighbors=5)        # creo un knnRegressor
+    knn.fit(X_train_scaled, y_train)                # fit del knn
+
+    # Checking performance on the training set
+    print('Accuracy of K-NN classifier on training set: {:.2f}'
+          .format(knn.score(X_train_scaled, y_train)))
+    # Checking performance on the test set
+    print('Accuracy of K-NN classifier on test set: {:.2f}'
+          .format(knn.score(X_test_scaled, y_test)))
+    example_food = [[5.5, 2.2, 0.70]]
+    example_food_scaled = scaler.transform(example_food)
+    # Making an prediction based on x values
+    print('Predicted food calories for ', example_food, ' is ',
+          knn.predict(example_food_scaled)[0] - 1)
+
 
 accepted = ["name", "calories", "carbohydrate", "protein", "total_fat"]
 convert = ["carbohydrate", "protein", "total_fat"]
 f_r = parseCSV("nutrition.csv")
 f_r = eliminateGrams(f_r)
-
-# f_r["calories"].hist(bins=15)
-# plt.show()
-correlation_matrix = f_r.corr()
-correlation_matrix["calories"]
+splittingAndEval(f_r)
