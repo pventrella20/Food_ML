@@ -103,23 +103,11 @@ def eliminateGrams(df):
         if name not in accepted:
             df = df.drop(name, axis=1)
     for col in convert:
-        for index in df.index:
-            if 'g' in df.loc[index, col]:
-                df.loc[index, col] = df.loc[index, col].replace('g', '')
-            if ' g' in df.loc[index, col]:
-                df.loc[index, col] = df.loc[index, col].replace(' g', '')
-            if 'mg' in df.loc[index, col]:
-                df.loc[index, col] = df.loc[index, col].replace('mg', '')
-                df.loc[index, col] = str(float(df.loc[index, col]) / 1000)
-            if ' mg' in df.loc[index, col]:
-                df.loc[index, col] = df.loc[index, col].replace(' mg', '')
-                df.loc[index, col] = str(float(df.loc[index, col]) / 1000)
-            if 'mcg' in df.loc[index, col]:
-                df.loc[index, col] = df.loc[index, col].replace('mcg', '')
-                df.loc[index, col] = str(float(df.loc[index, col]) / 1000000)
-            if ' mcg' in df.loc[index, col]:
-                df.loc[index, col] = df.loc[index, col].replace(' mcg', '')
-                df.loc[index, col] = str(float(df.loc[index, col]) / 1000000)
+        df[col] = df[col].astype(str)
+        df[col] = df[col].map(lambda x: x.rstrip('IU'))
+        df[col] = df[col].map(lambda x: x.rstrip('mcg'))
+        df[col] = df[col].map(lambda x: x.rstrip('mg'))
+        df[col] = df[col].map(lambda x: x.rstrip('g'))
     return df
 
 def splittingAndEval(df):

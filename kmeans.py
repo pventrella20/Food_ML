@@ -4,8 +4,9 @@ from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import MinMaxScaler
+from sklearn import metrics
 
-N_CLUSTER = 6
+N_CLUSTER = 4
 
 
 def parseCSV(path):
@@ -112,10 +113,11 @@ def eliminateGrams(df):
         df[col] = df[col].map(lambda x: x.rstrip('mcg'))
         df[col] = df[col].map(lambda x: x.rstrip('mg'))
         df[col] = df[col].map(lambda x: x.rstrip('g'))
+        df[col] = df[col].astype(float)
     return df
 
 
-def splittingAndEval(df):
+def knnRegressor(df):
     food_features = ["carbohydrate", "protein", "total_fat", "fiber"]
     X_food = df[food_features]
     y_food = df['calories']
@@ -219,14 +221,23 @@ def kMeansCategorization(df):
     scaler.fit(df[food_features])
     df[food_features] = scaler.transform(df[food_features])
     kMeans = KMeans(n_clusters=N_CLUSTER, random_state=0)
-    prediction = kMeans.fit_predict(df[food_features])
-    df['cluster_number'] = prediction
+    df['cluster_number'] = kMeans.fit_predict(df[food_features])
 
-    transformToLabel = {0: 'Frutta e Verdura', 1: 'Frutta secca e oli', 2: 'Carne-  e pesce', 3: 'Farinacei', 4: 'Dolci', 5: 'Formaggi'}
-    prediction = [transformToLabel[pred] for pred in prediction]
-    df['Cluster_name'] = prediction
+    #transformToLabel = {0: 'Frutta e Verdura', 1: 'Frutta secca e oli', 2: 'Carne-  e pesce', 3: 'Farinacei', 4: 'Dolci', 5: 'Formaggi'}
+    #prediction = [transformToLabel[pred] for pred in prediction]
+    #df['Cluster_name'] = prediction
     print(df.head(50))
 
+    # hyperparameter evaluation using silhouette score
+    k_to_test = range(2, 25, 1)  # [2,3,4, ..., 24]
+    silhouette_scores = {}
+    for k in k_to_test:
+        kmeans_k = KMeans(n_clusters=k)
+        kmeans_k.fit(df[food_features])
+        labels_k = kmeans_k.labels_
+        score_k = metrics.silhouette_score(df[food_features], labels_k)
+        silhouette_scores[k] = score_k
+        print("Tested kMeans with k = %d\tSS: %5.4f" % (k, score_k))
 
 accepted = ["name",
             "calories",
@@ -376,5 +387,6 @@ convert = ["total_fat",
            "water"]
 f_r = parseCSV("nutrition.csv")
 f_r = eliminateGrams(f_r)
-# splittingAndEval(f_r)
+# print(f_r.corr())
+# knnRegressor(f_r)
 kMeansCategorization(f_r)
