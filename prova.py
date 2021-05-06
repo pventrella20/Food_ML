@@ -110,16 +110,16 @@ def eliminateGrams(df):
                 df.loc[index, col] = df.loc[index, col].replace(' g', '')
             if 'mg' in df.loc[index, col]:
                 df.loc[index, col] = df.loc[index, col].replace('mg', '')
-                df.loc[index, col] = float(df.loc[index, col]) * 1000
+                df.loc[index, col] = str(float(df.loc[index, col]) / 1000)
             if ' mg' in df.loc[index, col]:
                 df.loc[index, col] = df.loc[index, col].replace(' mg', '')
-                df.loc[index, col] = float(df.loc[index, col]) * 1000
+                df.loc[index, col] = str(float(df.loc[index, col]) / 1000)
             if 'mcg' in df.loc[index, col]:
                 df.loc[index, col] = df.loc[index, col].replace('mcg', '')
-                df.loc[index, col] = float(df.loc[index, col]) * 1000000
+                df.loc[index, col] = str(float(df.loc[index, col]) / 1000000)
             if ' mcg' in df.loc[index, col]:
                 df.loc[index, col] = df.loc[index, col].replace(' mcg', '')
-                df.loc[index, col] = float(df.loc[index, col]) * 1000000
+                df.loc[index, col] = str(float(df.loc[index, col]) / 1000000)
     return df
 
 def splittingAndEval(df):
@@ -142,7 +142,7 @@ def splittingAndEval(df):
     # Checking performance on the test set
     print('Accuracy of K-NN regressor on test set: {:.2f}'
           .format(knn.score(X_test_scaled, y_test)))
-    example_food = [[91.27, 0.26, 0.1]]  # inserire qui i valori di carboidrati, proteine e grassi per la predizione
+    example_food = [[4.97, 1.92, 0.3]]  # inserire qui i valori di carboidrati, proteine e grassi per la predizione
     example_food_scaled = scaler.transform(example_food)
     # Making an prediction based on x values
     print('Predicted food calories for ', example_food, ' is ',
