@@ -4,7 +4,7 @@ from sklearn.cluster import KMeans
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn import metrics
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
@@ -13,7 +13,7 @@ from sklearn.feature_selection import SelectFromModel, RFE
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 from sklearn.feature_selection import f_classif
-
+from sklearn.svm import SVR
 
 N_CLUSTER = 6
 
@@ -178,13 +178,21 @@ def kMeansCategorization(df):
 
 def PCAFeatureSelection(df):
     food_features = allFoodFeature()
-    scaler = MinMaxScaler()
-    scaler.fit(df[food_features])
-    df[food_features] = scaler.transform(df[food_features])
+    X = df[food_features].drop('calories', axis=1)
+    y = df['calories']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    sc = MinMaxScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
     pca = PCA(n_components=4)
-    principalComponent = pca.fit_transform(df[food_features])
+    X_train = pca.fit_transform(X_train)
+    X_test = pca.transform(X_test)
+    explained_variance = pca.explained_variance_ratio_
+    print(explained_variance)
+    # pca = PCA(n_components=7)
+    # principalComponent = pca.fit_transform(df[food_features])
     features = range(pca.n_components_)
-    plt.bar(features, pca.explained_variance_ratio_, color='blue')
+    plt.bar(features, explained_variance, color='blue')
     plt.xlabel('PCA features')
     plt.ylabel('variance %')
     plt.xticks(features)
@@ -196,18 +204,17 @@ def randomForestFeatureSelection(df):
     X_food = df[food_features]
     y_food = df['calories']
     X_train, X_test, y_train, y_test = train_test_split(X_food, y_food, random_state=0)
-    sel = SelectFromModel(RandomForestClassifier(n_estimators=10))
+    sel = SelectFromModel(RandomForestClassifier(n_estimators=50))
     sel.fit(X_train, y_train)
-    print(sel.get_support())
-    selected_feat= X_train.columns[(sel.get_support())]
+    selected_feat = X_train.columns[(sel.get_support())]
     print(selected_feat)
 
 def feature_selection_univariate(df):
     array = df.values
-    X = array[:, 1:75]
-    Y = array[:, 1]
+    X = array[:, 1:73]
+    Y = array[:, 73]
     # feature extraction
-    test = SelectKBest(score_func=f_classif, k=10)
+    test = SelectKBest(score_func=f_classif, k=20)
     fit = test.fit(X, Y)
     # summarize scores
     np.set_printoptions(precision=3)
@@ -215,21 +222,22 @@ def feature_selection_univariate(df):
     features = fit.transform(X)
     # summarize selected features
     print(features[0:5, :])
-    for val in features[1]:
-        print(df.columns[(df == val).iloc[1]])
+    for val in features[2]:
+        print(df.columns[(df == val).iloc[2]])
 
 def feature_selection_recursive_elimination(df):
     array = df.values
     X = array[:, 1:75]
-    Y = array[:, 1]
-    Y = Y.astype('int')
+    y = array[:, 1]
+    y = y.astype('int')
     # feature extraction
-    model = LogisticRegression(solver='lbfgs')
-    rfe = RFE(model)
-    fit = rfe.fit(X, Y)
-    print("Num Features: %d" % fit.n_features_)
-    print("Selected Features: %s" % fit.support_)
-    print("Feature Ranking: %s" % fit.ranking_)
+    estimator = SVR(kernel="linear")
+    #model = LogisticRegression(solver='lbfgs')
+    selector = RFE(estimator, n_features_to_select=30, step=1)
+    selector = selector.fit(X, y)
+    print("Num Features: %d" % selector.n_features_)
+    print("Selected Features: %s" % selector.support_)
+    print("Feature Ranking: %s" % selector.ranking_)
 
 def allFoodFeature():
     food_features = ["calories",
@@ -454,11 +462,13 @@ convert = ["total_fat",
            "theobromine",
            "water"]
 f_r = parseCSV("nutrition.csv")
+fat = ['name', 'total_fat', 'fat', 'ash']
+print(f_r[fat].head(50))
 f_r = eliminateGrams(f_r)
 # print(f_r.corr())
 # knnRegressor(f_r)
 #kMeansCategorization(f_r)
-# PCAFeatureSelection(f_r)
-# randomForestFeatureSelection(f_r)
+#PCAFeatureSelection(f_r)
+#randomForestFeatureSelection(f_r)
 feature_selection_univariate(f_r)
 #feature_selection_recursive_elimination(f_r)
