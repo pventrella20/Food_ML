@@ -12,85 +12,68 @@ def parseCSV(path):
     :return: dataframe con i dati estratti
     '''
     column_names = [
-        "id",
-        "name",
-        "serving_size",
-        "calories",
-        "total_fat",
-        "saturated_fat",
-        "cholesterol",
-        "sodium",
-        "choline",
-        "folate",
-        "folic_acid",
-        "niacin",
-        "pantothenic_acid",
-        "riboflavin",
-        "thiamin",
-        "vitamin_a",
-        "vitamin_a_rae",
-        "carotene_alpha",
-        "carotene_beta",
-        "cryptoxanthin_beta",
-        "lutein_zeaxanthin",
-        "lucopene",
-        "vitamin_b12",
-        "vitamin_b6",
-        "vitamin_c",
-        "vitamin_d",
-        "vitamin_e",
-        "tocopherol_alpha",
-        "vitamin_k",
-        "calcium",
-        "copper",
-        "irom",
-        "magnesium",
-        "manganese",
-        "phosphorous",
-        "potassium",
-        "selenium",
-        "zink",
-        "protein",
-        "alanine",
-        "arginine",
-        "aspartic_acid",
-        "cystine",
-        "glutamic_acid",
-        "glycine",
-        "histidine",
-        "hydroxyproline",
-        "isoleucine",
-        "leucine",
-        "lysine",
-        "methionine",
-        "phenylalanine",
-        "proline",
-        "serine",
-        "threonine",
-        "tryptophan",
-        "tyrosine",
-        "valine",
-        "carbohydrate",
-        "fiber",
-        "sugars",
-        "fructose",
-        "galactose",
-        "glucose",
-        "lactose",
-        "maltose",
-        "sucrose",
-        "fat",
-        "saturated_fatty_acids",
-        "monounsaturated_fatty_acids",
-        "polyunsaturated_fatty_acids",
-        "fatty_acids_total_trans",
-        "alcohol",
-        "ash",
-        "caffeine",
-        "theobromine",
-        "water"
+        "Food Name",
+        "Food Number",
+        "Filter group",
+        "Energy (kcal)",
+        "Energy (kJ)",
+        "Carbohydrates (g)",
+        "Fat (g)",
+        "Protein (g)",
+        "Fibre (g)",
+        "Water (g)",
+        "Alcohol (g)",
+        "Ash (g)",
+        "Monosaccharides (g)",
+        "Disaccharides (g)",
+        "Sucrose (g)",
+        "Wholegrain total (g)",
+        "Sugar total (g)",
+        "Sum of saturated fatty acids (g)",
+        "Fatty acids 4:0-10:0 (g)",
+        "Fatty acid 12:0 (g)",
+        "Fatty acid 14:0 (g)",
+        "Fatty acid 16:0 (g)",
+        "Fatty acid 18:0 (g)",
+        "Fatty acid 20:0 (g)",
+        "Sum of monounsaturated fatty acids (g)",
+        "Fatty acid 16:1 (g)",
+        "Fatty acid 18:1 (g)",
+        "Sum of polyunsaturated fatty acids (g)",
+        "Fatty acids 18:2 (g)",
+        "Fatty acid 18:3 (g)",
+        "Fatty acid 20:4 (g)",
+        "EPA (Fatty acid 20:5) (g)",
+        "DPA (Fatty acid 22:5) (g)",
+        "DHA (Fatty acid 22:6) (g)",
+        "Cholesterol (mg)",
+        "Retinol (µg)",
+        "Retinolequivalents (RE)",
+        "Beta-carotene (µg)",
+        "Vitamin D (µg)",
+        "Vitamin E (mg)",
+        "Vitamin K (µg)",
+        "Thiamin (mg)",
+        "Riboflavin (mg)",
+        "Vitamin C (mg)",
+        "Niacin (mg)",
+        "Niacin equivalents (NE)",
+        "Vitamin B-6 (mg)",
+        "Vitamin B-12 (µg)",
+        "Folate (µg)",
+        "Phosphorus (mg)",
+        "Iodide (µg)",
+        "Iron (mg)",
+        "Calcium (mg)",
+        "Potassium (mg)",
+        "Magnesium (mg)",
+        "Sodium (mg)",
+        "Salt (g)",
+        "Selenium (µg)",
+        "Zinc (mg)",
+        "Waste (e.g. peel) (%)"
     ]
-    food = pd.read_csv(path, header=None, sep=',', error_bad_lines=False, names=column_names)
+    food = pd.read_csv(path, header=None, sep='\t', error_bad_lines=False, names=column_names)
     return food
 
 def eliminateGrams(df):
@@ -111,9 +94,9 @@ def eliminateGrams(df):
     return df
 
 def splittingAndEval(df):
-    food_features = ["carbohydrate", "protein", "total_fat"]
+    food_features = ["Carbohydrates (g)", "Protein (g)", "Fat (g)"]
     X_food = df[food_features]
-    y_food = df['calories']
+    y_food = df['Energy (kcal)']
     print(df.head(10))
     # preprocessing
     X_train, X_test, y_train, y_test = train_test_split(X_food, y_food, random_state=0)
@@ -137,8 +120,8 @@ def splittingAndEval(df):
           knn.predict(example_food_scaled)[0] - 1)
 
 
-accepted = ["name", "calories", "carbohydrate", "protein", "total_fat"]
-convert = ["carbohydrate", "protein", "total_fat"]
-f_r = parseCSV("nutrition.csv")
-f_r = eliminateGrams(f_r)
+#accepted = ["name", "calories", "carbohydrate", "protein", "total_fat"]
+#convert = ["carbohydrate", "protein", "total_fat"]
+f_r = parseCSV("LivsmedelsDB.csv")
+#f_r = eliminateGrams(f_r)
 splittingAndEval(f_r)
