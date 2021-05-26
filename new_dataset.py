@@ -3,13 +3,13 @@ import pandas as pd
 N_CLUSTER = 3
 
 
-def parseCSV(path):
+def parseCSV(path, sep):
     '''
     Legge un file .csv e lo incapsula in un dataframe
     :param path: percorso file .csv
     :return: dataframe con i dati estratti
     '''
-    food = pd.read_csv(path, sep='\t', error_bad_lines=False)
+    food = pd.read_csv(path, sep=sep, error_bad_lines=False)
     return food
 
 
@@ -126,8 +126,16 @@ categories = ['unknown',  'Eggs', 'Sweetened beverages', 'Soups'
               'Alcoholic beverages', 'Plant-based milk substitutes', 'Sandwiches',
               'Unsweetened beverages']
 
-f_r = parseCSV("openfoodfacts.csv")
-f_r = selectFeatures(f_r)
+f_r = parseCSV("openfoodfacts_search (6).csv", ',')
+#f_r = selectFeatures(f_r)
+f_r['product_name'] = f_r['product_name'].str.lower()
+f_r.sort_values("product_name", inplace=True)
+f_r.drop_duplicates(subset="product_name", keep=False, inplace=True)
+# f_r.drop_duplicates(subset ="last_modified_t", keep=False, inplace=True)
+f_r.drop_duplicates(subset=["energy-kj_100g", "fat_100g", "carbohydrates_100g", "proteins_100g"], keep=False, inplace=True)
+f_r = f_r[f_r['nutriscore_score'].notna()]
+# countries_list = ['Italia']
+# f_r_new = f_r[f_r['purchase_places'].isin(countries_list)]
 print(f_r.isnull().any())
 f_r = f_r.fillna(0)
 print(count_features(f_r, 'pnns_groups_2'))
