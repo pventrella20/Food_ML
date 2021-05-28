@@ -24,8 +24,8 @@ def cmatrix_display(accuracy, confusion_matrix, names, figsize=(10, 7)):
     plt.figure(figsize=figsize)
     plt.title('Confusion Matrix\n Accuracy: {0:.3f}'.format(accuracy))
     sn.heatmap(df_cm, cmap='rocket_r', annot=True, fmt='g')
-    plt.ylabel('True speaker')
-    plt.xlabel('Predicted speaker')
+    plt.ylabel('True letter')
+    plt.xlabel('Predicted letter')
     plt.subplots_adjust(bottom=0.155, right=0.924)
     plt.show()
 
