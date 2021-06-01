@@ -19,13 +19,13 @@ def hyper_opt_knn(X, y):
     best_model = clf.fit(X, y)
 
     # Print The value of best Hyperparameters
-    print('Best leaf_size:', best_model.best_estimator_.get_params()['leaf_size'])
-    print('Best p:', best_model.best_estimator_.get_params()['p'])
-    print('Best n_neighbors:', best_model.best_estimator_.get_params()['n_neighbors'])
-    print('Best weights:', best_model.best_estimator_.get_params()['weights'])
+    print('Best leaf_size:', best_model.best_estimator_.get_params()['knn__leaf_size'])
+    print('Best p:', best_model.best_estimator_.get_params()['knn__p'])
+    print('Best n_neighbors:', best_model.best_estimator_.get_params()['knn__n_neighbors'])
+    print('Best weights:', best_model.best_estimator_.get_params()['knn__weights'])
 
-    best_hyper_params = {'leaf_size': best_model.best_estimator_.get_params()['leaf_size'],
-                         'p': best_model.best_estimator_.get_params()['p'],
-                         'n_neighbors': best_model.best_estimator_.get_params()['n_neighbors'],
-                         'weights': best_model.best_estimator_.get_params()['weights']}
+    best_hyper_params = {'leaf_size': best_model.best_estimator_.get_params()['knn__leaf_size'],
+                         'p': best_model.best_estimator_.get_params()['knn__p'],
+                         'n_neighbors': best_model.best_estimator_.get_params()['knn__n_neighbors'],
+                         'weights': best_model.best_estimator_.get_params()['knn__weights']}
     return best_hyper_params
