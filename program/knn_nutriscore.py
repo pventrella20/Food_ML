@@ -34,6 +34,13 @@ def knn_classifier(df, col_list, hyp_opt: bool = False):
     print('Accuracy of K-NN classifier on test set: {:.2f}'
           .format(knn.score(X_test_scaled, y_test)))
 
-#def knn_regressor()
-
-
+def knn_regressor(df, col_list, hyp_opt: bool = False):
+    X_food = df[col_list]
+    y_food = df['nutriscore_grade']
+    hypers = {'leaf_size': 1, 'p': 1, 'n_neighbors': 7, 'weights': 'distance'}
+    # hyperparameter optimization
+    if hyp_opt:
+        print("> Hyperparameter optimization started...")
+        hypers = hyper_opt_knn(X_food, y_food)
+    # cross-validation
+    kFold_cross_validation_knn(X_food, y_food, hypers, 'regressor', 26)
