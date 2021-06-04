@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 
 
 def readCSV(path, separ):
@@ -34,4 +34,4 @@ def column_analisys(df, col):
     :param col: nome feature
     :return:
     """
-    print(df[col].values())
+    print(df[col].value_counts())
