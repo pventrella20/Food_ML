@@ -1,7 +1,6 @@
 from feature_selection import feature_selection_recursive_elimination
-from program.data_manager import readCSV, data_analisys
-from program.knn_nutriscore import knn_classifier, knn_regressor
-
+from program.data_manager import readCSV, data_analisys, column_analisys
+from program.nutriscore_classification import knn_classifier, knn_regressor, rf_classifier
 
 food_l = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'monounsaturated-fat_100g',
           'polyunsaturated-fat_100g', 'omega-3-fat_100g', 'carbohydrates_100g', 'sugars_100g', 'fiber_100g',
@@ -12,10 +11,14 @@ food_l = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'monounsaturated-fat_
 
 food_df = readCSV('../data/food_dataset_final.csv', ',')
 
-data_analisys(food_df, 'sodium_100g')
+#data_analisys(food_df, 'iodine_100g')
+
+column_analisys(food_df, 'categoria')
 
 #feature_selection_recursive_elimination(food_df, 20, food_l)
 
-#knn_classifier(food_df, food_l, True)
+knn_classifier(food_df, food_l, 26)
 
-knn_regressor(food_df, food_l, False)
+knn_regressor(food_df, food_l, 26)
+
+rf_classifier(food_df, food_l, 26)
