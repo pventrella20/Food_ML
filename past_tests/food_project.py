@@ -245,11 +245,10 @@ food_l = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'monounsaturated-fat_
           'vitamin-c_100g', 'vitamin-b1_100g', 'vitamin-b2_100g', 'vitamin-pp_100g', 'vitamin-b6_100g',
           'vitamin-b9_100g', 'vitamin-b12_100g', 'pantothenic-acid_100g', 'potassium_100g', 'calcium_100g',
           'phosphorus_100g', 'iron_100g', 'magnesium_100g', 'zinc_100g', 'iodine_100g']
-food_df = parseCSV("food_dataset2.csv", ',')
+food_df = parseCSV("data/food_dataset_final.csv", ',')
 food_df = changeCommas(food_df)
 food_df.sort_values("product_name", inplace=True)
-food_df.to_csv('food_dataset2.csv', index=False)
 #data_analisys(food_df)
 #feature_selection_recursive_elimination(food_df[food_l], 20)
 #knnClassifier(food_df)
-#knnRegressor(food_df)
+knnRegressor(food_df)

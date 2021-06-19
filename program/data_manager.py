@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 #matplotlib.use('Agg')
@@ -35,3 +34,17 @@ def column_analisys(df, col):
     :return:
     """
     print(df[col].value_counts())
+
+def correlation_matrix(df):
+    plt.figure(figsize=(15, 6))
+    sns.heatmap(df.corr(), annot=True)
+    plt.show()
+
+def pair_plot(df):
+    sns.pairplot(df)
+    plt.show()
+
+def box_plot(df):
+    plt.figure(figsize=(15, 4))
+    sns.boxplot(data=df, orient="h")
+    plt.show()
