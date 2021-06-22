@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+
 pd.options.mode.chained_assignment = None  # default='warn'
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.impute import KNNImputer
@@ -19,6 +20,7 @@ def knn_classifier(df, col_list, folds, hyp_opt: bool = False):
         hypers = hyper_opt_knn(X_food, y_food, folds, classifier=True)
     # cross-validation
     return kFold_cross_validation_knn(X_food, y_food, hypers, classifier=True, splits=folds)
+
 
 def knn_model(df, col_list, hypers, values):
     knn_class = KNeighborsClassifier(n_neighbors=hypers['n_neighbors'],
