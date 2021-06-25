@@ -17,7 +17,7 @@ if __name__ == "__main__":
     print('> Ottimizzare gli iperparametri? [y/n]')
     answ = input()
     print('> Inserire il numero di fold per la cross-validation:')
-    folds = input()
+    folds = int(input())
     if input == 'y' or input == 'Y':
         print('accuracy media: ', knn_classifier(food_df, food_l, True, folds=folds))
     else:
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     print('> Ottimizzare gli iperparametri? [y/n]')
     answ = input()
     print('> Inserire il numero di fold per la cross-validation:')
-    folds = input()
+    folds = int(input())
     if input == 'y' or input == 'Y':
         print('accuracy media: ', rf_classifier(food_df, food_l, True, folds=folds))
     else:
@@ -35,5 +35,5 @@ if __name__ == "__main__":
 
     print('Training e testing della rete Bayesiana...')
     print('> Inserire il numero di fold per la cross-validation:')
-    folds = input()
+    folds = int(input())
     print('accuracy media: ', bayesianTest(food_df, folds))
