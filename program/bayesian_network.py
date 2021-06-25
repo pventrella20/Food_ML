@@ -5,6 +5,7 @@ from pgmpy.inference import VariableElimination
 from pgmpy.models import BayesianModel
 from sklearn.preprocessing import MinMaxScaler
 
+from program.cross_validation import kFold_cross_validation_bayesian
 from program.data_manager import readCSV
 
 features = ['energy', 'fat', 'saturated-fat', 'carbohydrates', 'sugars', 'proteins', 'salt', 'nutriscore']
@@ -63,9 +64,6 @@ def bayesian_preprocessing(food_df, values=None):
                 cont += 1
     new_food_df = new_food_df.drop(features_ext, axis=1)
     return new_food_df, df_predict
-    # X_food = new_food_df.drop('nutri_value', axis=1)
-    # y_food = new_food_df['nutri_value']
-    # kFold_cross_validation_bayesian(X_food, y_food, 26)
 
 
 def bayesianNetwork(food_df, values):
@@ -89,9 +87,8 @@ def bayesianNetwork(food_df, values):
     else:
         return 'Alimento prevalentemente nocivo'
 
-
-if __name__ == "__main__":
-    food_df = readCSV('../data/food_dataset_final.csv', ',')
-    values = {'energy_value': 500, 'fat_value': 30, 'carbohydrates_value': 20,
-              'proteins_value': 6}
-    print(bayesianNetwork(food_df, values))
+def bayesianTest(food_df, folds):
+    new_food_df = bayesian_preprocessing(food_df)
+    X_food = new_food_df.drop('nutri_value', axis=1)
+    y_food = new_food_df['nutri_value']
+    kFold_cross_validation_bayesian(X_food, y_food, folds)

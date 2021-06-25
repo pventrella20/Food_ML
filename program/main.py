@@ -16,28 +16,8 @@ food_a = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'carbohydrates_100g',
 food_b = ['product_name', 'energy_100g', 'fat_100g', 'proteins_100g', 'carbohydrates_100g']
 
 
-# print(food_df[food_b].describe())
-#
-# kMeansCategorization(food_df, food_l)
-#
-# column_analisys(food_df, 'cluster')
-
-# correlation_matrix(food_df[food_l])
-
-# pair_plot(food_df)
-
-# box_plot(food_df[food_l])
-
-# data_analisys(food_df, 'iodine_100g')
-
-# column_analisys(food_df, 'pnns_groups_2')
 
 # feature_selection_recursive_elimination(food_df, 20, food_l)
-
-
-# knn_regressor(food_df, food_l, 26)
-
-# rf_classifier(food_df, food_l, 26)
 
 class Dialogo(tk.Frame):
     def __init__(self):
