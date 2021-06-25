@@ -16,9 +16,6 @@ food_a = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'carbohydrates_100g',
 food_b = ['product_name', 'energy_100g', 'fat_100g', 'proteins_100g', 'carbohydrates_100g']
 
 
-
-# feature_selection_recursive_elimination(food_df, 20, food_l)
-
 class Dialogo(tk.Frame):
     def __init__(self):
         self.energy = 0

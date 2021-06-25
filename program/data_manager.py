@@ -1,7 +1,9 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
-#matplotlib.use('Agg')
+
+
+# matplotlib.use('Agg')
 
 
 def readCSV(path, separ):
@@ -13,6 +15,7 @@ def readCSV(path, separ):
     """
     data = pd.read_csv(path, sep=separ, error_bad_lines=False)
     return data
+
 
 def data_analisys(df, feature):
     """
@@ -26,6 +29,7 @@ def data_analisys(df, feature):
     sns.boxplot(data=df[feature], ax=axes[1])
     plt.show()
 
+
 def column_analisys(df, col):
     """
     stampa a video il numero di valari nella feature
@@ -35,14 +39,17 @@ def column_analisys(df, col):
     """
     print(df[col].value_counts())
 
+
 def correlation_matrix(df):
     plt.figure(figsize=(15, 6))
     sns.heatmap(df.corr(), annot=True)
     plt.show()
 
+
 def pair_plot(df):
     sns.pairplot(df)
     plt.show()
+
 
 def box_plot(df):
     plt.figure(figsize=(15, 4))

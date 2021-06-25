@@ -5,7 +5,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 
-def hyper_opt_knn(X, y, folds, classifier: bool=True):
+def hyper_opt_knn(X, y, folds, classifier: bool = True):
     leaf_size = list(range(1, 50))
     n_neighbors = list(range(1, 30))
     p = [1, 2]

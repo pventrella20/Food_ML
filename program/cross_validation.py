@@ -1,8 +1,6 @@
 import statistics
 
-import numpy as np
 from pgmpy.estimators import BayesianEstimator
-from pgmpy.inference import VariableElimination
 from pgmpy.models import BayesianModel
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score

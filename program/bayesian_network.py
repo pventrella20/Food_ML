@@ -6,7 +6,6 @@ from pgmpy.models import BayesianModel
 from sklearn.preprocessing import MinMaxScaler
 
 from program.cross_validation import kFold_cross_validation_bayesian
-from program.data_manager import readCSV
 
 features = ['energy', 'fat', 'saturated-fat', 'carbohydrates', 'sugars', 'proteins', 'salt', 'nutriscore']
 features_ext = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'carbohydrates_100g', 'sugars_100g', 'proteins_100g',
@@ -41,7 +40,8 @@ def bayesian_preprocessing(food_df, values=None):
                     df_predict.loc[df_predict[col + '_100g'] >= i / 10, col + '_value'] = cont
                 else:
                     df_predict.loc[
-                        (df_predict[col + '_100g'] >= i / 10) & (df_predict[col + '_100g'] < (i + step) / 10), col + '_value'] = cont
+                        (df_predict[col + '_100g'] >= i / 10) & (
+                                    df_predict[col + '_100g'] < (i + step) / 10), col + '_value'] = cont
                 cont += 1
     new_food_df = pd.DataFrame(scaled_features, index=new_food_df.index, columns=new_food_df.columns)
     for feat in features:
@@ -89,6 +89,7 @@ def bayesianNetwork(food_df, values):
         return 'Alimento prevalentemente salutare'
     else:
         return 'Alimento prevalentemente nocivo'
+
 
 def bayesianTest(food_df, folds):
     new_food_df = bayesian_preprocessing(food_df)
