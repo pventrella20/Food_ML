@@ -31,6 +31,14 @@ def knn_classifier(df, col_list, folds, hyp_opt: bool = False):
 
 
 def knn_model(df, col_list, hypers, values):
+    """
+    predizione tramite classificatore KNN
+    :param df: dataframe in input
+    :param col_list: nomi delle features da considerare
+    :param hypers: iperparametri ottimizzati
+    :param values: valori da predire
+    :return: nutriscore predetto
+    """
     knn_class = KNeighborsClassifier(n_neighbors=hypers['n_neighbors'],
                                      leaf_size=hypers['leaf_size'],
                                      weights=hypers['weights'],

@@ -13,6 +13,12 @@ features_ext = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'carbohydrates_
 
 
 def bayesian_preprocessing(food_df, values=None):
+    """
+    operazioni preliminari da effettuare sul dataframe per renderlo idoneo ad una rete bayesiana
+    :param food_df: dataframe in input
+    :param values: None se non c'é bisogno di predizione
+    :return: dataset idoneo ad una rete bayesiana
+    """
     new_food_df = food_df[features_ext]
     scaler = MinMaxScaler()
     scaled_features = scaler.fit_transform(new_food_df)
@@ -70,6 +76,12 @@ def bayesian_preprocessing(food_df, values=None):
 
 
 def bayesianNetwork(food_df, values):
+    """
+    previsione tramite rete bayesiana
+    :param food_df: dataframe in input
+    :param values: valori da predire
+    :return: stringa decisionale
+    """
     new_food_df, predict_data = bayesian_preprocessing(food_df, values)
     model = BayesianModel(
         [('fat_value', 'saturated-fat_value'), ('carbohydrates_value', 'sugars_value'),
@@ -92,6 +104,12 @@ def bayesianNetwork(food_df, values):
 
 
 def bayesianTest(food_df, folds):
+    """
+    test di una rete bayesiana tramite cross-validation
+    :param food_df: dataframe in input
+    :param folds: numero di folds
+    :return: accuracy media
+    """
     new_food_df = bayesian_preprocessing(food_df)
     X_food = new_food_df.drop('nutri_value', axis=1)
     y_food = new_food_df['nutri_value']
