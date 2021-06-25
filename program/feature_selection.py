@@ -3,6 +3,13 @@ from sklearn.svm import SVR
 
 
 def feature_selection_recursive_elimination(df, n_features, col_list):
+    """
+    seleziona le features più rilevanti in un dataframe
+    :param df: dataframe in input
+    :param n_features: numero totale di features
+    :param col_list: nomi delle features
+    :return:
+    """
     array = df[col_list].values
     X = array[:, 1:29]
     y = array[:, 1]

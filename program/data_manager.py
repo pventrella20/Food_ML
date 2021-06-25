@@ -41,17 +41,32 @@ def column_analisys(df, col):
 
 
 def correlation_matrix(df):
+    """
+    stampa la matrice di correlazione di un dataframe
+    :param df:
+    :return:
+    """
     plt.figure(figsize=(15, 6))
     sns.heatmap(df.corr(), annot=True)
     plt.show()
 
 
 def pair_plot(df):
+    """
+    stampa il pair plot di un dataframe
+    :param df: dataframe in input
+    :return:
+    """
     sns.pairplot(df)
     plt.show()
 
 
 def box_plot(df):
+    """
+    stamoa il box plot di un dataframe
+    :param df: dataframe in input
+    :return:
+    """
     plt.figure(figsize=(15, 4))
     sns.boxplot(data=df, orient="h")
     plt.show()
