@@ -34,6 +34,13 @@ def KFold_splitting(X, y, splits=10):
 
 
 def kFold_cross_validation_bayesian(X, y, splits=10):
+    """
+    cross-validation per la rete bayesiana
+    :param X: X dataframe - valori noti
+    :param y: y column(s) - valori da predire
+    :param splits: numero di folds da utilizzare
+    :return: valore medio di accuracy
+    """
     folds = KFold_splitting(X, y, splits)
     scores = []
     for fold in folds:
@@ -62,7 +69,7 @@ def kFold_cross_validation_knn(X, y, hypers, classifier: bool = True, splits=10)
     :param y: y column(s) - valori da predire
     :param classifier: True se knn Classifier (default), False se knn Regressor
     :param splits: numero di folds
-    :return:
+    :return: valore medio di accuracy
     """
     folds = KFold_splitting(X, y, splits)
     scores = []
@@ -110,7 +117,7 @@ def kFold_cross_validation_rf(X, y, hypers, splits=10):
     :param X: X dataframe - valori noti
     :param y: y column(s) - valori da predire
     :param splits: numero di folds
-    :return:
+    :return: valore medio di accuracy
     """
     folds = KFold_splitting(X, y, splits)
     print('Cross validation (random_forest) via K-Fold [{} splits]'.format(splits))
