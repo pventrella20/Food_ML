@@ -13,7 +13,7 @@ food_b = ['product_name', 'energy_100g', 'fat_100g', 'proteins_100g', 'carbohydr
 if __name__ == "__main__":
     food_df = readCSV('../data/food_dataset_final.csv', ',')
     print(food_df[food_b].describe())
-    print('Training e testing del classificatore KNN...')
+    print('>>> Training e testing del classificatore KNN...')
     print('> Ottimizzare gli iperparametri? [y/n]')
     answ = input()
     print('> Inserire il numero di fold per la cross-validation:')
@@ -23,17 +23,15 @@ if __name__ == "__main__":
     else:
         print('accuracy media: ', knn_classifier(food_df, food_l, folds=folds))
 
-    print('Training e testing del classificatore RF...')
+    print('>>> Training e testing del classificatore RF...')
     print('> Ottimizzare gli iperparametri? [y/n]')
     answ = input()
-    print('> Inserire il numero di fold per la cross-validation:')
-    folds = int(input())
     if input == 'y' or input == 'Y':
         print('accuracy media: ', rf_classifier(food_df, food_l, True, folds=folds))
     else:
         print('accuracy media: ', rf_classifier(food_df, food_l, folds=folds))
 
-    print('Training e testing della rete Bayesiana...')
+    print('>>> Training e testing della rete Bayesiana...')
     print('> Inserire il numero di fold per la cross-validation:')
     folds = int(input())
     print('accuracy media: ', bayesianTest(food_df, folds))

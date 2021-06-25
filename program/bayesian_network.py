@@ -63,7 +63,10 @@ def bayesian_preprocessing(food_df, values=None):
                         (new_food_df[f_old] >= i / 10) & (new_food_df[f_old] < (i + step) / 10), f_val] = cont
                 cont += 1
     new_food_df = new_food_df.drop(features_ext, axis=1)
-    return new_food_df, df_predict
+    if values is not None:
+        return new_food_df, df_predict
+    else:
+        return new_food_df
 
 
 def bayesianNetwork(food_df, values):
@@ -91,4 +94,4 @@ def bayesianTest(food_df, folds):
     new_food_df = bayesian_preprocessing(food_df)
     X_food = new_food_df.drop('nutri_value', axis=1)
     y_food = new_food_df['nutri_value']
-    kFold_cross_validation_bayesian(X_food, y_food, folds)
+    return kFold_cross_validation_bayesian(X_food, y_food, folds)
