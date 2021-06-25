@@ -11,6 +11,14 @@ from program.hyperparameter_optimization import hyper_opt_knn, hyper_opt_rf
 
 
 def knn_classifier(df, col_list, folds, hyp_opt: bool = False):
+    """
+    testa un classificatore KNN
+    :param df: dataframe in input
+    :param col_list: lista di nomi di features da considerare
+    :param folds: numero di fold
+    :param hyp_opt: True se ottimizzazione degli iperparametri richiesta, False altrimenti
+    :return: valore medio di accuracy su tutte le fold
+    """
     X_food = df[col_list]
     y_food = df['nutriscore_grade']
     # hyperparameter optimization
@@ -51,6 +59,14 @@ def knn_model(df, col_list, hypers, values):
 
 
 def knn_regressor(df, col_list, folds, hyp_opt: bool = False):
+    """
+    testa un regressore KNN
+    :param df: dataframe in input
+    :param col_list: lista di nomi di features da considerare
+    :param folds: numero di fold
+    :param hyp_opt: True se ottimizzazione degli iperparametri richiesta, False altrimenti
+    :return: valore medio di accuracy su tutte le fold
+    """
     X_food = df[col_list]
     y_food = df['nutriscore_score']
     # hyperparameter optimization
@@ -63,6 +79,14 @@ def knn_regressor(df, col_list, folds, hyp_opt: bool = False):
 
 
 def rf_classifier(df, col_list, folds, hyp_opt: bool = False):
+    """
+    testa un classificatore RF
+    :param df: dataframe in input
+    :param col_list: lista di nomi di features da considerare
+    :param folds: numero di fold
+    :param hyp_opt: True se ottimizzazione degli iperparametri richiesta, False altrimenti
+    :return: valore medio di accuracy su tutte le fold
+    """
     X_food = df[col_list]
     y_food = df['nutriscore_grade']
     # parametri migliori
