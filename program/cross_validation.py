@@ -1,5 +1,9 @@
 import statistics
 
+import numpy as np
+from pgmpy.estimators import BayesianEstimator
+from pgmpy.inference import VariableElimination
+from pgmpy.models import BayesianModel
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
@@ -15,8 +19,8 @@ def KFold_splitting(X, y, splits=10):
     :param splits: numero di folds da utilizzare
     :return: lista delle varie combinazioni di folds (train/test sets)
     """
-    for column in X.columns:
-        X[column].astype('float64')
+    # for column in X.columns:
+    #     X[column] = X[column].astype('int64')
     kf = KFold(n_splits=splits, shuffle=True, random_state=0)
     folds = []
     for train_index, test_index in kf.split(X):
@@ -31,7 +35,28 @@ def KFold_splitting(X, y, splits=10):
     return folds
 
 
-def kFold_cross_validation_knn(X, y, hypers, classifier: bool=True, splits=10):
+def kFold_cross_validation_bayesian(X, y, splits=10):
+    folds = KFold_splitting(X, y, splits)
+    scores = []
+    for fold in folds:
+        model = BayesianModel(
+            [('fat_value', 'saturated-fat_value'), ('carbohydrates_value', 'sugars_value'),
+             ('proteins_value', 'salt_value'),
+             ('fat_value', 'energy_value'), ('carbohydrates_value', 'energy_value'), ('salt_value', 'nutri_value'),
+             ('energy_value', 'nutri_value'), ('saturated-fat_value', 'nutri_value'), ('sugars_value', 'nutri_value')])
+        predict_data = fold[1].copy()
+        real_data = fold[3].copy()
+        X['nutri_value'] = y
+        model.fit(X, estimator=BayesianEstimator, prior_type="BDeu")
+        y_pred = model.predict(predict_data)
+        scores.append(accuracy_score(y_pred, real_data))
+    avg_scores = statistics.mean(scores)
+    std_scores = statistics.stdev(scores)
+    print('Accuracy: %.3f (Standard Dev: %.3f)' % (avg_scores, std_scores))
+    return avg_scores
+
+
+def kFold_cross_validation_knn(X, y, hypers, classifier: bool = True, splits=10):
     """
     esegue cross validation utilizzando la tecnica K-fold su un knn Classifier o Regressor
     :param hypers: valori ottimali degli iperparametri
@@ -109,6 +134,7 @@ def kFold_cross_validation_rf(X, y, hypers, splits=10):
     std_scores = statistics.stdev(scores)
     print('Accuracy: %.3f (Standard Dev: %.3f)' % (avg_scores, std_scores))
     return avg_scores
+
 
 def nutriscore_converter(y):
     scores = []

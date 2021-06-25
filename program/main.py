@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from program.bayesian_network import bayesianNetwork
 from program.clustering import kMeansCluster
 from program.data_manager import readCSV
 from program.nutriscore_classification import knn_model
@@ -96,13 +97,17 @@ class Dialogo(tk.Frame):
         self.risultato_knn = tk.Text(self, height=1, width=50)  # Testo che mostra il risultato del knn.
         self.risultato_knn.grid(column=2, row=5, sticky=tk.E, padx=5, pady=5)
 
-        self.risultato_kmeans = tk.Text(self, height=20, width=50)  # Testo che mostra il risultato del knn.
-        self.risultato_kmeans.grid(column=2, row=6, sticky=tk.E, padx=5, pady=5)
+        self.risultato_kmeans = tk.Text(self, height=20, width=50)  # Testo che mostra il risultato del k-means.
+        self.risultato_kmeans.grid(column=2, row=7, sticky=tk.E, padx=5, pady=5)
+
+        self.risultato_bayes = tk.Text(self, height=1, width=50)  # Testo che mostra il risultato del knn.
+        self.risultato_bayes.grid(column=2, row=6, sticky=tk.E, padx=5, pady=5)
 
     # Raccogliamo l'input e calcoliamo
     def calcola(self):
         self.risultato_knn.delete("1.0", "end")
         self.risultato_kmeans.delete("1.0", "end")
+        self.risultato_bayes.delete("1.0", "end")
         if len(self.entrata1.get()) != 0:
             self.energy = float(self.entrata1.get())
         else:
@@ -124,12 +129,15 @@ class Dialogo(tk.Frame):
                   'proteins_100g': self.prot}
         result_knn = knn_model(self.food_df, food_l, self.hypers_knn, values)
         result_kmeans = kMeansCluster(self.food_df, food_b, values)
-        self.risultato_knn.insert(tk.END, "Nutriscore = " + result_knn )
+        result_bayes = bayesianNetwork(self.food_df, values)
+        self.risultato_knn.insert(tk.END, "Nutriscore = " + result_knn)
+        self.risultato_bayes.insert(tk.END, result_bayes)
         self.risultato_kmeans.insert(tk.END, result_kmeans)
 
     def reset(self):
         self.risultato_knn.delete("1.0", "end")
         self.risultato_kmeans.delete("1.0", "end")
+        self.risultato_bayes.delete("1.0", "end")
         self.entrata1.delete(0, "end")
         self.entrata2.delete(0, "end")
         self.entrata3.delete(0, "end")
