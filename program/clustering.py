@@ -6,6 +6,12 @@ N_CLUSTER = 150
 
 
 def kMeansCategorization(data, col_list):
+    """
+    clustering del dataframe secondo features in input
+    :param data: dataframe su cui effettuare il clustering
+    :param col_list: nome delle features da considerare
+    :return: valori contenuti in un cluster
+    """
     output = ""
     # scaler = StandardScaler()
     # scaler.fit(df[col_list])
@@ -29,6 +35,13 @@ def kMeansCategorization(data, col_list):
 
 
 def kMeansCluster(df, col_list, values):
+    """
+    predizione cluster dei valori in input
+    :param df: dataframe in input
+    :param col_list: nomi delle features per il clustering
+    :param values: valori in input
+    :return: stringa contenente valori appartenenti al cluster predetto
+    """
     new_col = []
     for col in col_list:
         if col in values:
