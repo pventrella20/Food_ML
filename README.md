@@ -1,4 +1,4 @@
-### Food_Machine_Learning project
+## Food_Machine_Learning project
 
 - requisiti: librerie ```sklearn```, ```pgmpy``` e ```tkinter```
 - a partire da valori nutrizionali, quali ```kCalorie```, ```proteine```, ```grassi``` e ```carboidrati``` su 100g, contenuti in un alimento, predice:
