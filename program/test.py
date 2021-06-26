@@ -18,7 +18,7 @@ if __name__ == "__main__":
     answ = input()
     print('> Inserire il numero di fold per la cross-validation:')
     folds = int(input())
-    if input == 'y' or input == 'Y':
+    if answ == 'y' or answ == 'Y':
         print('accuracy media: ', knn_classifier(food_df, food_l, True, folds=folds))
     else:
         print('accuracy media: ', knn_classifier(food_df, food_l, folds=folds))
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     print('>>> Training e testing del classificatore RF...')
     print('> Ottimizzare gli iperparametri? [y/n]')
     answ = input()
-    if input == 'y' or input == 'Y':
+    if answ == 'y' or answ == 'Y':
         print('accuracy media: ', rf_classifier(food_df, food_l, True, folds=folds))
     else:
         print('accuracy media: ', rf_classifier(food_df, food_l, folds=folds))
