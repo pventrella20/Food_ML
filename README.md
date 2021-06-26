@@ -6,4 +6,4 @@
   - se l'alimento é prevalentemente sano/nocivo (mediante ```Rete Bayesiana```)
   - gli alimenti con valori nutrizionali simili (mediante ```hard clustering```)
 - avviare il file ```main.py``` disponibile nella directory ```program```
-- disponibile file ```test.py``` per il testing dei modelli
+- disponibile file ```test.py``` per il testing dei modelli, con relativa ottimizzazione di iperparametri e cross-validation
