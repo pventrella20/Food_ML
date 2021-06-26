@@ -74,7 +74,8 @@ def bayesianNetwork(food_df, values):
         [('fat_value', 'saturated-fat_value'), ('carbohydrates_value', 'sugars_value'),
          ('proteins_value', 'salt_value'),
          ('fat_value', 'energy_value'), ('carbohydrates_value', 'energy_value'), ('salt_value', 'nutriscore_value'),
-         ('energy_value', 'nutriscore_value'), ('saturated-fat_value', 'nutriscore_value'), ('sugars_value', 'nutriscore_value')])
+         ('energy_value', 'nutriscore_value'), ('saturated-fat_value', 'nutriscore_value'),
+         ('sugars_value', 'nutriscore_value')])
     model.fit(new_food_df, estimator=BayesianEstimator, prior_type="BDeu")
     model_infer = VariableElimination(model)
     q = model_infer.query(variables=['nutriscore_value'],
@@ -101,6 +102,7 @@ def bayesianTest(food_df, folds):
     X_food = new_food_df.drop('nutri_value', axis=1)
     y_food = new_food_df['nutri_value']
     return kFold_cross_validation_bayesian(X_food, y_food, folds)
+
 
 def values_to_range(new_food_df, f_old, f_val, i, cont, step):
     """
