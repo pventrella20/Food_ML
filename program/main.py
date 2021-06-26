@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 from program.bayesian_network import bayesianNetwork
 from program.clustering import kMeansCluster
@@ -66,6 +67,15 @@ class Dialogo(tk.Frame):
         self.entrata4 = tk.Entry(self)  # Casella d'inserimento dei grassi
         self.entrata4.grid(column=1, row=3, sticky=tk.E, padx=5, pady=5)
 
+        self.etichetta5 = tk.Label(self, text="<- NUTRISCORE (A-E)")  # Etichetta del nutriscore
+        self.etichetta5.grid(column=3, row=5, sticky=tk.W, padx=5, pady=5)
+
+        self.etichetta5 = tk.Label(self, text="<- È SALUTARE?")  # Etichetta ALIMENTO SALUTARE-NON SALUTARE
+        self.etichetta5.grid(column=3, row=6, sticky=tk.W, padx=5, pady=5)
+
+        self.etichetta5 = tk.Label(self, text="<- ALIMENTI SIMILI")  # Etichetta alimenti simili
+        self.etichetta5.grid(column=3, row=7, sticky=tk.W, padx=5, pady=5)
+
         self.bottone1 = tk.Button(self, text="Analisi", command=self.calcola)  # Bottone "Analisi"
         self.bottone1.grid(column=1, row=4, sticky=tk.E, padx=5, pady=5)
         self.bottone2 = tk.Button(self, text="Reset", command=self.reset)  # Bottone "Reset"
@@ -80,41 +90,91 @@ class Dialogo(tk.Frame):
         self.risultato_bayes = tk.Text(self, height=1, width=50)  # Testo che mostra il risultato del knn.
         self.risultato_bayes.grid(column=2, row=6, sticky=tk.E, padx=5, pady=5)
 
+
     # Raccogliamo l'input e calcoliamo
     def calcola(self):
+        errorMex = 0
+        exc = 1
         self.risultato_knn.delete("1.0", "end")
         self.risultato_kmeans.delete("1.0", "end")
         self.risultato_bayes.delete("1.0", "end")
         if len(self.entrata1.get()) != 0:
+            exc = self.checkString("calorie", self.entrata1.get())
+        else:
+            errorMex = 1 #modifica la variabile per far stampare il messaggio d'errore per valori nulli
+        if ((exc == 0) and (errorMex == 0)):
             self.energy = float(self.entrata1.get())
-        else:
-            self.energy = 0
-        self.energy *= 4.184
+            self.energy *= 4.184
         if len(self.entrata2.get()) != 0:
+            exc = self.checkString("carboidrati", self.entrata2.get())
+        else:
+            errorMex = 1
+        if ((exc == 0) and (errorMex == 0)):
             self.carb = float(self.entrata2.get())
+        if len(self.entrata4.get()) != 0:
+            exc = self.checkString("grassi", self.entrata4.get())
         else:
-            self.carb = 0
-        if len(self.entrata3.get()) != 0:
-            self.prot = float(self.entrata3.get())
-        else:
-            self.prot = 0
-        if len(self.entrata1.get()) != 0:
+            errorMex = 1
+        if ((exc == 0) and (errorMex == 0)):
             self.gras = float(self.entrata4.get())
+        if len(self.entrata3.get()) != 0:
+            exc = self.checkString("proteine", self.entrata3.get())
         else:
-            self.gras = 0
+            errorMex = 1
+        if (errorMex == 1) and (exc == 0):
+            messagebox.showerror("Error", "INSERIRE TUTTI I VALORI") # messaggio d'errore per valori nulli
+
+        if ((exc == 0) and (errorMex == 0)):
+            self.prot = float(self.entrata3.get())
+
         values = {'energy_100g': self.energy, 'fat_100g': self.gras, 'carbohydrates_100g': self.carb,
                   'proteins_100g': self.prot}
-        result_knn = knn_model(self.food_df, food_l, self.hypers_knn, values)
-        result_kmeans = kMeansCluster(self.food_df, food_b, values)
-        result_bayes = bayesianNetwork(self.food_df, values)
-        self.risultato_knn.insert(tk.END, "Nutriscore = " + result_knn)
-        self.risultato_bayes.insert(tk.END, result_bayes)
-        self.risultato_kmeans.insert(tk.END, result_kmeans)
+        if ((exc == 0) and (errorMex == 0)): #stampa i risultati nel caso in cui i vari input siano corretti
+            result_knn = knn_model(self.food_df, food_l, self.hypers_knn, values)
+            result_bayes = bayesianNetwork(self.food_df, values)
+            result_kmeans = kMeansCluster(self.food_df, food_b, values)
+            if len(result_kmeans) == 0: #stampa messaggio d'errore se i valori in input non hanno prodotto risultati
+                messagebox.showerror("REINSERIRE VALORI", "I VALORI NUTRIZIONALI INSERITI NON HANNO PRODOTTO RISULTATI")
+            else: #stampo i risultati
+                self.risultato_knn.insert(tk.END, "Nutriscore = " + result_knn)
+                self.risultato_kmeans.insert(tk.END, result_kmeans)
+                self.risultato_bayes.insert(tk.END, result_bayes)
+
+    def checkString(self, feature, numberControl):
+        ret = 0
+        errMex = 0
+        if (feature == "grassi" or feature == "carboidrati" or feature == "proteine"):
+            try:
+                float(numberControl)
+                if (float(numberControl) > 100 or float(numberControl) < 0): #controllo se i valori in input di grassi proteine e carbo siano compresi tra 0 e 100
+                    self.reset()
+                    errMex = 1
+                    ret = 1
+            except ValueError: #controllo se sia stata inserita una stringa come input
+                self.reset()
+                errMex = 2
+                ret = 1
+        else:
+            try:
+                float(numberControl)
+                if (float(numberControl) > 1000 or float(numberControl) < 0): #controllo se il valore in input di calorie sia compreso tra 0 e 1000
+                    self.reset()
+                    errMex = 1
+                    ret = 1
+            except ValueError:
+                self.reset()
+                errMex = 2
+                ret = 1
+        if errMex == 1:
+            messagebox.showerror("ERROR",
+                                 "Il valore delle caratteristiche alimentari non è correto. CALORIE(0-1000) PROTEINE-GRASSI-CARBOIDRATI(0-100)")
+        elif errMex == 2:
+            messagebox.showerror("ERROR", "Valori non numerici non consentiti. Reinserire valori")
+        return ret
 
     def reset(self):
         self.risultato_knn.delete("1.0", "end")
         self.risultato_kmeans.delete("1.0", "end")
-        self.risultato_bayes.delete("1.0", "end")
         self.entrata1.delete(0, "end")
         self.entrata2.delete(0, "end")
         self.entrata3.delete(0, "end")
