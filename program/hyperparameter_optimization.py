@@ -49,7 +49,6 @@ def hyper_opt_rf(X, y, folds):
     :param X: X dataframe - valori noti
     :param y: y column(s) - valori da predire
     :param folds: numero di folds per la cross-validation
-    :param classifier: True se classificatore KNN, False se regressore KNN
     :return: parametri ottimizzati
     """
     n_estimators = [100, 125, 150, 175, 200]
