@@ -175,6 +175,7 @@ class Dialogo(tk.Frame):
     def reset(self):
         self.risultato_knn.delete("1.0", "end")
         self.risultato_kmeans.delete("1.0", "end")
+        self.risultato_bayes.delete("1.0", "end")
         self.entrata1.delete(0, "end")
         self.entrata2.delete(0, "end")
         self.entrata3.delete(0, "end")

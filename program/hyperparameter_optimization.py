@@ -51,12 +51,16 @@ def hyper_opt_rf(X, y, folds):
     :param folds: numero di folds per la cross-validation
     :return: parametri ottimizzati
     """
-    n_estimators = [100, 125, 150, 175, 200]
-    criterion = ['gini', 'entropy']
-    max_features = ['auto', 'sqrt', 'log2']
-    min_samples_split = [2, 5, 10]
-    min_samples_leaf = [1, 2, 4]
-    bootstrap = [True, False]
+    n_estimators = [100, 150, 200]  # The number of trees in the forest
+    criterion = ['gini', 'entropy']  # The function to measure the quality of a split. Supported criteria are “gini” for
+                                    # the Gini impurity and “entropy” for the information gain
+    max_features = ['auto', 'sqrt', 'log2']  # The number of features to consider when looking for the best split
+    min_samples_split = [5, 10, 15, 20]  # Grow trees with max_leaf_nodes in best-first fashion. Best nodes are defined as
+                                    # relative reduction in impurity. If None then unlimited number of leaf nodes
+    min_samples_leaf = [8, 16, 32, 64]  # A node will be split if this split induces a decrease of the impurity greater than
+                                  # or equal to this value
+    bootstrap = [True, False]  # Whether bootstrap samples are used when building trees. If False, the whole dataset is
+                               # used to build each tree
 
     hyperparameters = dict(rf__n_estimators=n_estimators, rf__criterion=criterion, rf__max_features=max_features,
                            rf__min_samples_split=min_samples_split, rf__min_samples_leaf=min_samples_leaf,
