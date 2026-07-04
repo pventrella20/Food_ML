@@ -1,17 +1,13 @@
 from program.bayesian_network import bayesianTest
+from program.config import DATASET_PATH, FEATURES_CLUSTER, FEATURES_KNN
 from program.data_manager import readCSV
 from program.nutriscore_classification import knn_classifier, rf_classifier
 
-food_l = ['energy_100g', 'fat_100g', 'saturated-fat_100g', 'monounsaturated-fat_100g',
-          'polyunsaturated-fat_100g', 'omega-3-fat_100g', 'carbohydrates_100g', 'sugars_100g', 'fiber_100g',
-          'proteins_100g', 'salt_100g', 'sodium_100g', 'vitamin-a_100g', 'vitamin-d_100g', 'vitamin-e_100g',
-          'vitamin-c_100g', 'vitamin-b1_100g', 'vitamin-b2_100g', 'vitamin-pp_100g', 'vitamin-b6_100g',
-          'vitamin-b9_100g', 'vitamin-b12_100g', 'pantothenic-acid_100g', 'potassium_100g', 'calcium_100g',
-          'phosphorus_100g', 'iron_100g', 'magnesium_100g', 'zinc_100g', 'iodine_100g']
-food_b = ['product_name', 'energy_100g', 'fat_100g', 'proteins_100g', 'carbohydrates_100g']
+food_l = FEATURES_KNN
+food_b = FEATURES_CLUSTER
 
 if __name__ == "__main__":
-    food_df = readCSV('../data/food_dataset_final.csv', ',')
+    food_df = readCSV(DATASET_PATH, ',')
     print(food_df[food_b].describe())
     print('>>> Training e testing del classificatore KNN...')
     print('> Ottimizzare gli iperparametri? [y/n]')

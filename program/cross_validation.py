@@ -1,12 +1,20 @@
-import statistics
+﻿import statistics
 
 from pgmpy.estimators import BayesianEstimator
-from pgmpy.models import BayesianModel
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
+
+# Import robusto della rete bayesiana (nome cambiato tra versioni di pgmpy)
+try:  # pgmpy >= 0.1.26
+    from pgmpy.models import DiscreteBayesianNetwork as _BayesianNetwork
+except ImportError:  # pragma: no cover
+    try:
+        from pgmpy.models import BayesianNetwork as _BayesianNetwork
+    except ImportError:
+        from pgmpy.models import BayesianModel as _BayesianNetwork
 
 
 def KFold_splitting(X, y, splits=10):
@@ -44,7 +52,7 @@ def kFold_cross_validation_bayesian(X, y, splits=10):
     folds = KFold_splitting(X, y, splits)
     scores = []
     for fold in folds:
-        model = BayesianModel(
+        model = _BayesianNetwork(
             [('fat_value', 'saturated-fat_value'), ('carbohydrates_value', 'sugars_value'),
              ('proteins_value', 'salt_value'),
              ('fat_value', 'energy_value'), ('carbohydrates_value', 'energy_value'), ('salt_value', 'nutri_value'),
@@ -155,3 +163,4 @@ def nutriscore_converter(y):
         else:
             scores.append('e')
     return scores
+
