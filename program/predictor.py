@@ -1,13 +1,13 @@
 """
-Service layer che orchestra i tre modelli di ML del progetto.
+Service layer that orchestrates the project's three ML models.
 
-Espone un'unica classe ``FoodPredictor`` che addestra una sola volta:
-  * il classificatore KNN del Nutriscore;
-  * la rete bayesiana per la salubrita';
-  * il clustering KMeans per gli alimenti simili.
+Exposes a single ``FoodPredictor`` class that trains once:
+  * KNN classifier for Nutri-Score;
+  * Bayesian network for healthiness;
+  * KMeans clustering for similar foods.
 
-In questo modo l'interfaccia utente puo' effettuare piu' predizioni senza
-ri-addestrare i modelli ad ogni richiesta.
+This allows the UI to run multiple predictions without retraining models
+on every request.
 """
 from __future__ import annotations
 
@@ -26,18 +26,18 @@ from program.nutriscore_classification import NutriScoreKNN
 
 @dataclass
 class PredictionResult:
-    """Contenitore tipizzato del risultato di una predizione."""
+    """Typed container for prediction output."""
     nutriscore: str
     health: str
     similar_foods: pd.DataFrame
 
     @property
     def is_healthy(self) -> bool:
-        return "salutare" in self.health.lower()
+        return "healthy" in self.health.lower() and "unhealthy" not in self.health.lower()
 
 
 class FoodPredictor:
-    """Orchestratore dei modelli, addestrati una sola volta alla costruzione."""
+    """Model orchestrator, trained once at construction time."""
 
     def __init__(self, df: pd.DataFrame | None = None):
         self.df = df if df is not None else readCSV()
@@ -47,7 +47,7 @@ class FoodPredictor:
 
     @staticmethod
     def build_values(energy_kcal: float, carbs: float, proteins: float, fats: float) -> dict:
-        """Costruisce il dizionario di feature convertendo le kcal in kJ."""
+        """Build the feature dictionary converting kcal to kJ."""
         return {
             "energy_100g": energy_kcal * KCAL_TO_KJ,
             "carbohydrates_100g": carbs,
@@ -56,7 +56,7 @@ class FoodPredictor:
         }
 
     def predict(self, values: dict) -> PredictionResult:
-        """Esegue le tre predizioni e restituisce un ``PredictionResult``."""
+        """Run all three predictions and return a ``PredictionResult``."""
         return PredictionResult(
             nutriscore=self.knn.predict(values),
             health=self.bayes.predict(values),

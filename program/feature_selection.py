@@ -4,10 +4,10 @@ from program.config import DATASET_PATH, FEATURES_KNN
 from program.data_manager import readCSV
 def feature_selection_recursive_elimination(df, n_features, col_list):
     """
-    seleziona le features piu' rilevanti in un dataframe
-    :param df: dataframe in input
-    :param n_features: numero di features da selezionare
-    :param col_list: nomi delle features
+    Select the most relevant features in a DataFrame.
+    :param df: input DataFrame
+    :param n_features: number of features to select
+    :param col_list: feature names
     """
     array = df[col_list].values
     X = array[:, 1:29]

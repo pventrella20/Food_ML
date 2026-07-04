@@ -1,65 +1,62 @@
 # Food Machine Learning
 
-Applicazione di Machine Learning che, a partire dai valori nutrizionali di un
-alimento (**kcal**, **carboidrati**, **proteine**, **grassi** su 100 g),
-predice:
+Machine Learning application that predicts, from a food's nutritional values
+(**kcal**, **carbohydrates**, **proteins**, **fats** per 100 g):
 
-- il **Nutriscore** `[A-E]` (classificatore **KNN**);
-- se l'alimento è prevalentemente **sano/nocivo** (**Rete Bayesiana**);
-- gli **alimenti con valori nutrizionali simili** (**clustering KMeans**).
+- **Nutri-Score** `[A-E]` (using a **KNN** classifier);
+- whether the food is mostly **healthy/unhealthy** (using a **Bayesian Network**);
+- **similar foods** with close nutritional values (using **KMeans** clustering).
 
-## Requisiti
+## Requirements
 
 - Python 3.10+
-- Dipendenze in [`requirements.txt`](requirements.txt)
+- Dependencies listed in [`requirements.txt`](requirements.txt)
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Avvio dell'interfaccia web (consigliato)
+## Run the web interface (recommended)
 
-L'interfaccia moderna è realizzata con **Streamlit**:
+The modern interface is built with **Streamlit**:
 
 ```bash
 streamlit run app.py
 ```
 
-Si aprirà nel browser un'app con form validato, badge Nutriscore colorato,
-verdetto di salubrità e tabella interattiva degli alimenti simili.
+This opens a browser app with a validated input form, color-coded Nutri-Score
+badge, health verdict, and interactive table of similar foods.
 
-> La vecchia GUI Tkinter resta disponibile per compatibilità con
-> `python -m program.main` (eseguire dalla root del progetto).
+> The old Tkinter GUI is still available for compatibility via
+> `python -m program.main` (run from project root).
 
-## Architettura
+## Architecture
 
-Il codice è organizzato in moduli nella directory `program/`:
+Code is organized into modules in the `program/` directory:
 
-| Modulo | Ruolo |
+| Module | Role |
 | --- | --- |
-| `config.py` | **Configurazione centralizzata**: percorsi, liste di feature, iperparametri, costanti. |
-| `predictor.py` | **Service layer**: la classe `FoodPredictor` addestra i modelli **una sola volta** e orchestra le predizioni. |
-| `nutriscore_classification.py` | Classificatore KNN del Nutriscore (`NutriScoreKNN`, pattern *train-once*). |
-| `bayesian_network.py` | Rete bayesiana per la salubrità (`BayesianHealthModel`, *train-once*). |
-| `clustering.py` | Clustering KMeans per gli alimenti simili (`FoodClustering`, *train-once*). |
-| `hyperparameter_optimization.py` | Ottimizzazione iperparametri (GridSearch) per KNN e Random Forest. |
-| `cross_validation.py` | K-fold cross-validation per i modelli. |
-| `data_manager.py` | Caricamento e analisi esplorativa dei dati. |
-| `feature_selection.py` | Selezione delle feature (RFE). |
-| `test.py` | Testing dei modelli supervisionati con cross-validation. |
-| `main.py` | GUI Tkinter *legacy*. |
+| `config.py` | **Centralized configuration**: paths, feature lists, hyperparameters, constants. |
+| `predictor.py` | **Service layer**: `FoodPredictor` trains models **once** and orchestrates predictions. |
+| `nutriscore_classification.py` | KNN Nutri-Score classifier (`NutriScoreKNN`, *train-once* pattern). |
+| `bayesian_network.py` | Bayesian network for healthiness (`BayesianHealthModel`, *train-once*). |
+| `clustering.py` | KMeans clustering for similar foods (`FoodClustering`, *train-once*). |
+| `hyperparameter_optimization.py` | Hyperparameter optimization (GridSearch) for KNN and Random Forest. |
+| `cross_validation.py` | K-fold cross-validation for models. |
+| `data_manager.py` | Data loading and exploratory analysis utilities. |
+| `feature_selection.py` | Feature selection (RFE). |
+| `test.py` | CLI testing for supervised models with cross-validation. |
+| `main.py` | Legacy Tkinter GUI. |
 
-Il dataset è in `data/food_dataset_final.csv`; in `docs/` informazioni sul
-Nutriscore e grafici dell'analisi.
+The dataset is in `data/food_dataset_final.csv`; `docs/` contains Nutri-Score
+reference material and analysis images.
 
-## Principali migliorie rispetto alla versione precedente
+## Main improvements over the previous version
 
-- **UX**: nuova interfaccia web Streamlit al posto della GUI Tkinter.
-- **Performance**: i modelli vengono addestrati **una sola volta** (prima
-  venivano ri-addestrati ad ogni predizione) e messi in cache.
-- **Architettura**: configurazione centralizzata (`config.py`), service layer
-  (`predictor.py`), eliminazione della duplicazione delle liste di feature e
-  dei percorsi hardcoded.
-- **Compatibilità**: rimozione di API deprecate/rimosse
+- **UX**: modern Streamlit web interface replacing old Tkinter-first workflow.
+- **Performance**: models are trained **once** (instead of retraining per prediction) and cached.
+- **Architecture**: centralized configuration (`config.py`), service layer (`predictor.py`),
+  and reduced duplication of feature lists and hardcoded paths.
+- **Compatibility**: removed/reworked deprecated APIs
   (`pandas.read_csv(error_bad_lines=...)`, `pgmpy.BayesianModel`,
   `RandomForest max_features='auto'`).

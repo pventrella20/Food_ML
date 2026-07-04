@@ -7,7 +7,7 @@ from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 
-# Import robusto della rete bayesiana (nome cambiato tra versioni di pgmpy)
+# Robust Bayesian network import (name changed across pgmpy versions)
 try:  # pgmpy >= 0.1.26
     from pgmpy.models import DiscreteBayesianNetwork as _BayesianNetwork
 except ImportError:  # pragma: no cover
@@ -19,11 +19,11 @@ except ImportError:  # pragma: no cover
 
 def KFold_splitting(X, y, splits=10):
     """
-    divisione del dataset in train e test set
-    :param X: X dataframe - valori noti
-    :param y: y column(s) - valori da predire
-    :param splits: numero di folds da utilizzare
-    :return: lista delle varie combinazioni di folds (train/test sets)
+    Split dataset into train and test sets.
+    :param X: X DataFrame - known values
+    :param y: y column(s) - target values to predict
+    :param splits: number of folds
+    :return: list of fold combinations (train/test sets)
     """
     # for column in X.columns:
     #     X[column] = X[column].astype('int64')
@@ -43,11 +43,11 @@ def KFold_splitting(X, y, splits=10):
 
 def kFold_cross_validation_bayesian(X, y, splits=10):
     """
-    cross-validation per la rete bayesiana
-    :param X: X dataframe - valori noti
-    :param y: y column(s) - valori da predire
-    :param splits: numero di folds da utilizzare
-    :return: valore medio di accuracy
+    Cross-validation for the Bayesian network.
+    :param X: X DataFrame - known values
+    :param y: y column(s) - target values to predict
+    :param splits: number of folds
+    :return: mean accuracy
     """
     folds = KFold_splitting(X, y, splits)
     scores = []
@@ -71,13 +71,13 @@ def kFold_cross_validation_bayesian(X, y, splits=10):
 
 def kFold_cross_validation_knn(X, y, hypers, classifier: bool = True, splits=10):
     """
-    esegue cross validation utilizzando la tecnica K-fold su un knn Classifier o Regressor
-    :param hypers: valori ottimali degli iperparametri
-    :param X: X dataframe - valori noti
-    :param y: y column(s) - valori da predire
-    :param classifier: True se knn Classifier (default), False se knn Regressor
-    :param splits: numero di folds
-    :return: valore medio di accuracy
+    Run K-fold cross-validation on a KNN classifier or regressor.
+    :param hypers: optimal hyperparameter values
+    :param X: X DataFrame - known values
+    :param y: y column(s) - target values to predict
+    :param classifier: True for KNN Classifier (default), False for KNN Regressor
+    :param splits: number of folds
+    :return: mean accuracy
     """
     folds = KFold_splitting(X, y, splits)
     scores = []
@@ -120,12 +120,12 @@ def kFold_cross_validation_knn(X, y, hypers, classifier: bool = True, splits=10)
 
 def kFold_cross_validation_rf(X, y, hypers, splits=10):
     """
-    esegue cross validation utilizzando la tecnica K-fold su un Random Forest
-    :param hypers: valori ottimali degli iperparametri
-    :param X: X dataframe - valori noti
-    :param y: y column(s) - valori da predire
-    :param splits: numero di folds
-    :return: valore medio di accuracy
+    Run K-fold cross-validation on a Random Forest model.
+    :param hypers: optimal hyperparameter values
+    :param X: X DataFrame - known values
+    :param y: y column(s) - target values to predict
+    :param splits: number of folds
+    :return: mean accuracy
     """
     folds = KFold_splitting(X, y, splits)
     print('Cross validation (random_forest) via K-Fold [{} splits]'.format(splits))

@@ -4,16 +4,16 @@ from sklearn.cluster import KMeans
 
 from program.config import KCAL_TO_KJ, N_CLUSTERS
 
-N_CLUSTER = N_CLUSTERS  # retro-compatibilita'
+N_CLUSTER = N_CLUSTERS  # backward compatibility
 
 
 class FoodClustering:
     """
-    Clustering KMeans addestrato UNA sola volta.
+    KMeans clustering trained ONCE.
 
-    Il modello viene fittato nel costruttore; per ogni input si predice il
-    cluster di appartenenza e si restituiscono gli alimenti dello stesso cluster
-    (in precedenza il KMeans veniva ri-addestrato ad ogni predizione).
+    The model is fitted in the constructor; for each input we predict the
+    assigned cluster and return foods from that cluster
+    (previously KMeans was retrained for each prediction).
     """
 
     def __init__(self, df, col_list, n_clusters: int = N_CLUSTERS):
@@ -24,22 +24,22 @@ class FoodClustering:
         self.data['cluster'] = self.model.fit_predict(self.data[self.numeric_cols])
 
     def similar_foods(self, values: dict) -> pd.DataFrame:
-        """Restituisce un DataFrame con gli alimenti del cluster predetto."""
+        """Return a DataFrame with foods in the predicted cluster."""
         row = [[values.get(c, np.nan) for c in self.numeric_cols]]
         cluster = int(self.model.predict(row)[0])
         members = self.data[self.data['cluster'] == cluster].copy()
-        # energia in kcal per una lettura piu' naturale
+        # Energy in kcal for more intuitive display.
         if 'energy_100g' in members.columns:
             members['energy_kcal'] = (members['energy_100g'] / KCAL_TO_KJ).round(2)
         return members
 
     def similar_foods_text(self, values: dict) -> str:
-        """Versione testuale (retro-compatibile con la vecchia GUI Tkinter)."""
+        """Text output (backward-compatible with legacy Tkinter GUI)."""
         output = ""
         for _, row in self.similar_foods(values).iterrows():
             output += row['product_name'] + '\n('
             output += 'kCal ' + str(round(row['energy_100g'] / KCAL_TO_KJ, 2)) + ', '
-            output += 'prot ' + str(round(row['proteins_100g'], 2)) + ', '
+            output += 'protein ' + str(round(row['proteins_100g'], 2)) + ', '
             output += 'fats ' + str(round(row['fat_100g'], 2)) + ', '
             output += 'carb ' + str(round(row['carbohydrates_100g'], 2)) + ')'
             output += '\n-------------\n'
@@ -48,8 +48,8 @@ class FoodClustering:
 
 def kMeansCluster(df, col_list, values):
     """
-    Wrapper retro-compatibile: costruisce un ``FoodClustering`` e restituisce il testo.
-    Preferire l'uso diretto della classe per evitare ri-addestramenti.
-    :return: stringa contenente gli alimenti del cluster predetto
+    Backward-compatible wrapper: build ``FoodClustering`` and return text.
+    Prefer direct class usage to avoid retraining.
+    :return: string with foods in the predicted cluster
     """
     return FoodClustering(df, col_list).similar_foods_text(values)

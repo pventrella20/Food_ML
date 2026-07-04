@@ -13,11 +13,11 @@ from program.hyperparameter_optimization import hyper_opt_knn, hyper_opt_rf
 
 class NutriScoreKNN:
     """
-    Classificatore KNN del Nutriscore addestrato UNA sola volta.
+    Nutri-Score KNN classifier trained ONCE.
 
-    Rispetto alla vecchia funzione ``knn_model`` (che ri-addestrava imputer,
-    scaler e modello ad ogni predizione), qui l'addestramento avviene nel
-    costruttore e ogni predizione riusa gli oggetti gia' fittati.
+    Compared to the old ``knn_model`` function (which retrained imputer,
+    scaler, and model on each prediction), training happens in the constructor
+    and each prediction reuses already-fitted objects.
     """
 
     def __init__(self, df, col_list, hypers=None):
@@ -27,7 +27,7 @@ class NutriScoreKNN:
         X = df[self.col_list]
         y = df[TARGET_GRADE]
 
-        # imputer e scaler fittati sui soli dati di training
+        # Imputer and scaler fitted on training data only.
         self.imputer = KNNImputer(n_neighbors=KNN_IMPUTER_NEIGHBORS).fit(X)
         X_imputed = self.imputer.transform(X)
         self.scaler = StandardScaler().fit(X_imputed)
@@ -42,7 +42,7 @@ class NutriScoreKNN:
         self.model.fit(self.scaler.transform(X_imputed), y)
 
     def predict(self, values: dict) -> str:
-        """Predice il Nutriscore (A-E) per i valori forniti dall'utente."""
+        """Predict Nutri-Score (A-E) for user-provided values."""
         row = [values.get(col, np.nan) for col in self.col_list]
         row_df = pd.DataFrame([row], columns=self.col_list)
         row_imputed = self.imputer.transform(row_df)
@@ -52,17 +52,17 @@ class NutriScoreKNN:
 
 def knn_model(df, col_list, hypers, values):
     """
-    Wrapper retro-compatibile: costruisce un ``NutriScoreKNN`` e predice.
-    Preferire l'uso diretto della classe per evitare ri-addestramenti.
-    :return: nutriscore predetto (stringa)
+    Backward-compatible wrapper: builds ``NutriScoreKNN`` and predicts.
+    Prefer direct class usage to avoid retraining.
+    :return: predicted Nutri-Score (string)
     """
     return NutriScoreKNN(df, col_list, hypers).predict(values)
 
 
 def knn_classifier(df, col_list, folds, hyp_opt: bool = False):
     """
-    testa un classificatore KNN
-    :return: valore medio di accuracy su tutte le fold
+    Evaluate a KNN classifier.
+    :return: mean accuracy across all folds
     """
     X_food = df[col_list]
     y_food = df[TARGET_GRADE]
@@ -75,8 +75,8 @@ def knn_classifier(df, col_list, folds, hyp_opt: bool = False):
 
 def knn_regressor(df, col_list, folds, hyp_opt: bool = False):
     """
-    testa un regressore KNN
-    :return: valore medio di accuracy su tutte le fold
+    Evaluate a KNN regressor.
+    :return: mean accuracy across all folds
     """
     X_food = df[col_list]
     y_food = df[TARGET_SCORE]
@@ -89,12 +89,12 @@ def knn_regressor(df, col_list, folds, hyp_opt: bool = False):
 
 def rf_classifier(df, col_list, folds, hyp_opt: bool = False):
     """
-    testa un classificatore RF
-    :return: valore medio di accuracy su tutte le fold
+    Evaluate a Random Forest classifier.
+    :return: mean accuracy across all folds
     """
     X_food = df[col_list]
     y_food = df[TARGET_GRADE]
-    # 'log2' sostituisce 'auto', rimosso in sklearn >= 1.3
+    # 'log2' replaces 'auto', which was removed in sklearn >= 1.3
     hypers = {'n_estimators': 150, 'criterion': 'gini', 'max_features': 'log2', 'min_samples_split': 2,
               'min_samples_leaf': 1, 'bootstrap': True}
     if hyp_opt:

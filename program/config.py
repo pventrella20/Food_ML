@@ -1,30 +1,30 @@
 """
-Configurazione centralizzata del progetto Food_ML.
+Centralized configuration for the Food_ML project.
 
-Raccoglie in un unico punto percorsi, liste di feature, iperparametri e
-costanti condivise, eliminando la duplicazione presente nei vari moduli.
+Collects paths, feature lists, hyperparameters, and shared constants
+in one place, removing duplication across modules.
 """
 from __future__ import annotations
 
 from pathlib import Path
 
-# --- Percorsi (robusti, indipendenti dalla working directory) ---------------
+# --- Paths (robust, working-directory independent) ---------------------------
 PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent
 DATA_DIR: Path = PROJECT_ROOT / "data"
 DOCS_DIR: Path = PROJECT_ROOT / "docs"
 DATASET_PATH: Path = DATA_DIR / "food_dataset_final.csv"
 CSV_SEPARATOR: str = ","
 
-# --- Costanti di dominio -----------------------------------------------------
-# Il dataset esprime l'energia in kJ, mentre l'utente ragiona in kcal.
+# --- Domain constants --------------------------------------------------------
+# The dataset stores energy in kJ, while users typically input kcal.
 KCAL_TO_KJ: float = 4.184
 
-# Target delle predizioni
+# Prediction targets
 TARGET_GRADE: str = "nutriscore_grade"
 TARGET_SCORE: str = "nutriscore_score"
 
-# --- Liste di feature --------------------------------------------------------
-# Feature complete usate dal classificatore KNN (ex "food_l")
+# --- Feature lists -----------------------------------------------------------
+# Full feature set used by the KNN classifier (former "food_l")
 FEATURES_KNN: list[str] = [
     "energy_100g", "fat_100g", "saturated-fat_100g", "monounsaturated-fat_100g",
     "polyunsaturated-fat_100g", "omega-3-fat_100g", "carbohydrates_100g", "sugars_100g",
@@ -35,17 +35,17 @@ FEATURES_KNN: list[str] = [
     "phosphorus_100g", "iron_100g", "magnesium_100g", "zinc_100g", "iodine_100g",
 ]
 
-# Feature usate per il clustering (ex "food_b"); include il nome prodotto
+# Features used for clustering (former "food_b"); includes product name
 FEATURES_CLUSTER: list[str] = [
     "product_name", "energy_100g", "fat_100g", "proteins_100g", "carbohydrates_100g",
 ]
 
-# Feature nutrizionali inserite dall'utente (in unità "utente": kcal e grammi)
+# Nutritional features entered by users (user units: kcal and grams)
 USER_INPUT_FEATURES: list[str] = [
     "energy_100g", "carbohydrates_100g", "proteins_100g", "fat_100g",
 ]
 
-# --- Iperparametri -----------------------------------------------------------
+# --- Hyperparameters ---------------------------------------------------------
 KNN_HYPERS: dict = {"leaf_size": 1, "n_neighbors": 7, "p": 1, "weights": "distance"}
 KNN_IMPUTER_NEIGHBORS: int = 7
 N_CLUSTERS: int = 150

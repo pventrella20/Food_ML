@@ -7,12 +7,12 @@ from sklearn.preprocessing import StandardScaler
 
 def hyper_opt_knn(X, y, folds, classifier: bool = True):
     """
-    ottimizzazione dei parametri di un modello KNN
-    :param X: X dataframe - valori noti
-    :param y: y column(s) - valori da predire
-    :param folds: numero di folds per la cross-validation
-    :param classifier: True se classificatore KNN, False se regressore KNN
-    :return: parametri ottimizzati
+    Hyperparameter optimization for a KNN model.
+    :param X: X DataFrame - known values
+    :param y: y column(s) - target values to predict
+    :param folds: number of folds for cross-validation
+    :param classifier: True for KNN classifier, False for KNN regressor
+    :return: optimized parameters
     """
     leaf_size = list(range(1, 50))
     n_neighbors = list(range(1, 30))
@@ -45,17 +45,17 @@ def hyper_opt_knn(X, y, folds, classifier: bool = True):
 
 def hyper_opt_rf(X, y, folds):
     """
-    ottimizzazione dei parametri di un modello RF
-    :param X: X dataframe - valori noti
-    :param y: y column(s) - valori da predire
-    :param folds: numero di folds per la cross-validation
-    :return: parametri ottimizzati
+    Hyperparameter optimization for a Random Forest model.
+    :param X: X DataFrame - known values
+    :param y: y column(s) - target values to predict
+    :param folds: number of folds for cross-validation
+    :return: optimized parameters
     """
     n_estimators = [100, 150, 200]  # The number of trees in the forest
     criterion = ['gini', 'entropy']  # The function to measure the quality of a split. Supported criteria are “gini” for
                                     # the Gini impurity and “entropy” for the information gain
     max_features = ['sqrt', 'log2']  # The number of features to consider when looking for the best split
-                                     # ('auto' rimosso in sklearn >= 1.3)
+                                     # ('auto' removed in sklearn >= 1.3)
     min_samples_split = [5, 10, 15, 20]  # Grow trees with max_leaf_nodes in best-first fashion. Best nodes are defined as
                                     # relative reduction in impurity. If None then unlimited number of leaf nodes
     min_samples_leaf = [8, 16, 32, 64]  # A node will be split if this split induces a decrease of the impurity greater than
